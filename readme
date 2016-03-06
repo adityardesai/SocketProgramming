@@ -1,6 +1,4 @@
-1. NAME : ADITYA RAMACHANDRA DESAI
-2. USCID : 5246-4961-15
-3. ASSIGNMENT WORK FLOW
+##WorkFlow
 	a. All the servers boots up and read the corresponnding files.
 	b. Each server will read the file and add the delimiters to form a string Z (involving neighbors and cost) and sends to client over TCP.
 	c. The delimites used are (*) between words and (+) between lines.
@@ -13,7 +11,7 @@
 	j. For all the output message, corresponding port of sender and receiver is displayed.
 	k. All the data processing, handling and management is made using pointers and array of char pointers. 
 
-4. Code files details
+##Code files details
 	a. client.c : C code to receive the data from all the 4 servers using TCP, calculate the Adjacency and Cost matrix.Send the details 			  of the topology to all the servers along with the cost matrix. Calculates the MST and the cost associated with it.
 	b. client2.c : C code to receive the data from all the 4 servers using TCP, calculate the Adjacency and Cost matrix.Send the details 			  of the topology to all the servers along with the cost matrix. Calculates the MST and the cost associated with it. This 				file has sendto UDP function for B commented, so no data will be sent to serverB using UDP.
 	c. serverA.c :
@@ -24,58 +22,9 @@
 	g. constants.h : Lists all the header files required along with the Linked List decleration.
 	h. makefile : Compiles all the code and generates the executables.
 
-5. Specific order to run the code : client-->serverA-->serverB-->serverC-->serverD. Also please see 7.c to 7.f. Please always do 
+##How to Run
+ Specific order to run the code : client-->serverA-->serverB-->serverC-->serverD. Also please see 7.c to 7.f. Please always do 
    makeclean before using the re-running the code.
-
-6. Format of the Messages (Please also read 9.e)
-	a. The output message on Server sides is displayed as mentioned in the PDF document after the Phase 1.
-	b. There is a change in the output method display after Phase 2. The output format is as follows
-	   <Server X> : <Neighbors of ServerX> and <Corresponding Cost>
-	c. Sometimes, the Neighbor Cost information is dislayed twice for the last tuple.
-7. Format of the Messages exchanged between client and servers
-	a. Server will read a complete line form the text file and after each word puts a delimiter (*)  then after each line adds another
-	    delimiter (+) and forms a message string. This is followed by all servers.
-	b. Each server will append it's  identification like A,B,C or D at the beginning of message string and send to client via TCP.
-	c. Client will remove the identifiers (using the methods mentioned below in 8), parse the data ans store in the linked list and  
-	   arrays to calculate the cost matrix and display the message.
-	d. Once the client recevies all the server messages in order A B C and D, it will read from respective linked lists, and uses same de-limiter logic. It will append (*) after each word and (+) after each line along with the server identifier. This message string is  
-	  passed to all of the servers over UDP. Clients will parse the string and display on the console.
-	e. Data strucutres used : Linked List, 2D arrays for cost matrix and MST calculations, 2D array for adjacency matrix and 1D array of character pointers to store the server neighbors and cost for 
-8. Following is the exception about the project
-	a. The UDP message sent over the UDP from client to server B is not displayed on Nunki. The same code for same input will provide correct output on Ubuntu. The details are provided in the document.
-	b. There is no change in the code or the way the client sends the message to server A B C and D. But only on nunki the serverB does not receive the message sent from client.
-	c. The error message that is displayed is 'Address family is not supported by the Protocol Family' at the client end and program exits.
-	d. After the program exits there is no MST display and adjacency matrix , server C and D wont receive the data at all.
-	e. So in order to check if the UDP functionality is working correctly, I have included the file client2.c , which is clone of the code client.c but with the sendTo message to B commented.
-	f. Now, Please run the client2.c--> serverA --> serverB-->serverC-->serverD instead of step 5 mentioned above.
-	g. Obviously, the serverB will not receive the data but remaining server A C and D will display the ouptput as expected.
-	h. I have tried hardcoding the address and port number to localhost and port but the result is same. I thought there is something wrong in the structure addrinfo but I was able to print the same values for the ai_family and ai_socktype for all the servers.This makes me believe that the link list traversal to get the address details is correct.
-	i. The project folder has a PDF file(ScreenShots.PDF) with name that has the screen shot of this weird behavior.
-
-9. The program runs completely fine for all the input values on ubuntu, but on nunki, only server B does not receive the data. I have 
-	searched every possible answer on Google and asked different TA's but have not able to fix this. The UDP functionality works, completely fine with other servers on nunki and for all servers on ubuntu.
-10. All of the code is implemented using modular functionality approach in C and using double pointers. Some of the important Functions used in the project
-	a. void checkData(char message[MAXDATASIZE]) and void checkTopology(char message[MAXDATASIZE]) : These function takes the string, parses it and stores the reult[MAXDATASIZE] as a global value. The code is referred from the following website : http://apiexamples.com/c/string/strtok_r.html
-	b. void processData() : This function process the incoming stream of the data, stores in the linked list. The method also calcutlates the cost matrix for the given network topology. 
-	c. PrintMST(), CheckMST() and FindMinCost() are used for the calcualtion of the MST.
-	d. char *readfile(char *filename) : Takes in put as file name, reads the contents of the file, stores in String form and passes the pointer (of string)to the calling function.
-	e. void formatUDPMessage(char message[MAXDATASIZE]) : Takes a raw UDP message, parses it and formats the message that can be displayed on the console. Here I have used the concept of double pointers, so displaying only 'A' or 'B' is difficult (sometimes throws segmentation fault) so, I have followed the display format message as mentioned in point 6 above.
-11. Calculation of MST and limitations.
-	a. The project will fail, if there is a loop between the same node. i.e. edge starting from A and loop back to A then the project wont work.
-	b. For calculation of the MST, the cost matrix needs to be a simple graph.
-	c. I have used Prims algorithm to implemet the MST calculation. I did not prefer Kruskal and Reverse Delete because, the implementation is difficult and also my professor in algorithms mentioned that finding Union Set is difficult. I have referred Algorithm Design by Kleinberg and Tardos. I have also refered the code from : https://www.cse.ust.hk/~dekai/271/notes/L07/L07.pdf and http://www.geeksforgeeks.org/greedy-algorithms-set-5-prims-minimum-spanning-tree-mst-2/
-	d. Output of MST is of the following form
-	Edge between ServerNode X and Edge between ServerNode Y with the cost Z. The help text on console will help in understanding that - 0 is serverA, 1 is serverB , 2 is serverC and 3 is serverD.
-	e. The minimum cost is calcualted by considering all the min-cuts in the Graph(cost matrix). All these Min-Cuts(X-Y pairs) are displayed on the console, which is essentially a MST tree. 
-	f. The edge costs must be strictly as follows : 0 < Edge Cost < 9999
-	g. It is assumed that the traversal of the graph starts from the first vertex of the graph.
-12. Care has been taken to make sure that the ports are closed and they can be re-used again with the help of SO_REUSEADDR. Buf if 'ports already in use message's 	     displays, please kill the process using kill -9 <PID> and then execute the files.
-13.  All the functions related to socket programming has been referred from Beej's guide for Computer Networking.
-14. Difference between client.c and client2.c
-	There is absolutely no difference in client.c and client2.c, except
-	a. sendtoB UDP method is commented in client2.c
-	b. The program will exit when failure to send UDP message to B is seen. So the MST is printed before.
-
 
 
 
